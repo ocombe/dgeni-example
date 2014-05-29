@@ -1,16 +1,21 @@
-// @dgeni developers: Why do we need canonical-path?
+// Canonical path provides a consistent path (i.e. always forward slashes) across different OSes
 var path = require('canonical-path');
 
+var DocGenerator = require('dgeni').DocGenerator;
+var generator = new DocGenerator([
+  require('dgeni-packages/base'),
+  require('dgeni-packages/jsdoc'),
+  require('dgeni-packages/nunjucks')
+]);
 
-module.exports = function(config) {
-  // Use jsdocPackage
-  require('dgeni-packages/jsdoc')(config);
+generator.package('dgeni-example', ['base', 'jsdoc', 'nunjucks'])
 
-  // And the nunjucks template renderer
-  require('dgeni-packages/nunjucks')(config);
+.config(function(config) {
 
   // Set logging level
   config.set('logging.level', 'info');
+
+  config.set('basePath', __dirname);
 
   // Add your own templates to render docs
   config.prepend('rendering.templateFolders', [
@@ -45,6 +50,6 @@ module.exports = function(config) {
   // content files (i.e. the files that contain the content of each "doc") to be stored in
   // `build/docs/partials`
   config.set('rendering.contentsFolder', 'docs');
+});
 
-  return config;
-};
+module.exports = generator;

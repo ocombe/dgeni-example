@@ -1,9 +1,12 @@
 var gulp = require('gulp');
-var dgeni = require('dgeni');
 
 gulp.task('dgeni', function() {
-  var generateDocs = dgeni.generator('docs/dgeni.conf.js');
-  return generateDocs();
+  try {
+    return require('./docs/dgeni.conf').generate();
+  } catch(x) {
+    console.log(x.stack);
+    throw x;
+  }
 });
 
 gulp.task('default', ['dgeni']);
